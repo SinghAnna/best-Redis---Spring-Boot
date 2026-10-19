@@ -1,522 +1,255 @@
-# Redis + Spring Boot — Complete Production-Oriented Roadmap
+# Redis + Spring Boot — Production-Oriented Complete Guide
 
-> A complete, structured learning roadmap for using **Redis with Spring Boot** in real-world, production-grade backend systems.
+![Java](https://img.shields.io/badge/Java-17+-orange)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.x-brightgreen)
+![Redis](https://img.shields.io/badge/Redis-7.x-red)
+![Kafka](https://img.shields.io/badge/Apache%20Kafka-Event%20Streaming-black)
+![Docker](https://img.shields.io/badge/Docker-Containerized-blue)
+![Kubernetes](https://img.shields.io/badge/Kubernetes-Cloud%20Native-326CE5)
+![License](https://img.shields.io/badge/License-MIT-yellow)
 
-This roadmap covers Redis fundamentals, Spring Data Redis, caching, sessions, distributed locks, rate limiting, pub/sub, streams, persistence, high availability, security, monitoring, and production deployment.
-
----
-
-## How to Use This Roadmap
-
-1. Follow the parts in order.
-2. For every part:
-   - Learn the concept
-   - Understand internal working
-   - Write Java + Spring Boot code
-   - Test locally using Docker
-   - Learn production best practices
-   - Review common mistakes
-   - Prepare interview questions
-3. Mark completed topics with ✅.
-4. Build one final production-style project at the end.
+> A complete, production-oriented guide for integrating **Redis with Spring Boot** — covering caching, sessions, distributed locks, rate limiting, leaderboards, Pub/Sub, Redis Streams, persistence, high availability, security, monitoring, Docker, Kubernetes, testing, and real-world system design.
 
 ---
 
-## Learning Outcome
+## 📌 About This Repository
 
-After completing this roadmap, you will be able to:
+This repository is a structured learning path and production reference for using **Redis with Spring Boot** in real backend systems.
 
-- Use Redis as a cache, session store, rate limiter, and distributed coordination layer.
-- Integrate Redis with Spring Boot using Spring Data Redis.
-- Configure RedisTemplate, serializers, connection pooling, and TTLs correctly.
-- Implement cache-aside, write-through, write-behind, and cache invalidation strategies.
-- Use Redis for distributed locks, idempotency, rate limiting, leaderboards, and real-time features.
-- Deploy Redis safely in production with persistence, replication, Sentinel, Cluster, monitoring, and security.
-- Design a scalable Redis architecture for microservices.
+It is designed for Java backend developers, microservice developers, and students who want to understand Redis not only as a cache, but as a complete low-latency data layer for modern distributed applications.
 
----
+### What Makes This Guide Different?
 
-## Phase 1 — Redis Fundamentals
-
-### Part 1: Introduction to Redis
-
-- What is Redis?
-- Why Redis is fast
-- In-memory database vs disk-based database
-- Redis vs MySQL/PostgreSQL
-- Redis vs MongoDB
-- Redis vs Kafka
-- Where Redis should and should not be used
-- Redis use cases in backend systems
-- Redis architecture overview
-- Redis CLI basics
-
-### Part 2: Redis Data Types
-
-- `STRING`
-- `LIST`
-- `SET`
-- `HASH`
-- `SORTED SET`
-- `STREAM`
-- `BITMAP`
-- `HYPERLOGLOG`
-- `GEO`
-- When to use each data type
-- Real backend examples for each type
-- Memory and performance considerations
-
-### Part 3: Redis Commands and TTL
-
-- Basic commands: `SET`, `GET`, `DEL`, `EXISTS`
-- Expiration: `EXPIRE`, `TTL`, `PERSIST`
-- Atomic operations: `INCR`, `DECR`
-- Batch operations: `MGET`, `MSET`
-- `SCAN` vs `KEYS`
-- Redis transactions: `MULTI`, `EXEC`, `DISCARD`
-- Lua scripting basics
-- Pipelining
-- Common mistakes with Redis commands
+- Production-oriented, not only beginner tutorials
+- Complete Spring Boot code examples
+- Redis CLI + Java implementation side by side
+- Real-world use cases: caching, sessions, locks, rate limiting, feeds
+- High availability: replication, Sentinel, Cluster
+- Security, monitoring, Docker, Kubernetes, and testing
+- Interview preparation with scenario-based questions
+- Final Social Media Backend project using Redis, Kafka, and Spring Boot
 
 ---
 
-## Phase 2 — Spring Boot + Redis Integration
+## 🚀 Quick Start
 
-### Part 4: Spring Data Redis Setup
+### Prerequisites
 
-- What is Spring Data Redis?
-- Spring Data Redis architecture
-- Redis client options: Lettuce vs Jedis
-- Why Lettuce is the default client
-- Adding Redis dependencies
-- Connecting Spring Boot to Redis
-- Local Redis setup using Docker
-- Basic connectivity test
-- Redis health check with Actuator
+- Java 17+
+- Maven 3.8+
+- Docker and Docker Compose
+- Basic Spring Boot knowledge
 
-### Part 5: Redis Connection Configuration
+### 1. Clone the Repository
 
-- `spring.data.redis` properties
-- Host, port, password, database index
-- Connection timeout vs command timeout
-- Lettuce connection pooling
-- Pool sizing strategy
-- SSL/TLS configuration
-- Environment-specific configuration
-- Configuration using `application.yml`
-- Configuration using `@ConfigurationProperties`
-- Common connection errors and fixes
+```bash
+git clone [https://github.com/your-username/redis-spring-boot-guide.git](https://github.com/your-username/redis-spring-boot-guide.git)
+cd redis-spring-boot-guide
+```
 
-### Part 6: RedisTemplate Deep Dive
+### 2. Start Redis Using Docker
 
-- What is `RedisTemplate`?
-- `RedisTemplate` vs `StringRedisTemplate`
-- `opsForValue()`
-- `opsForHash()`
-- `opsForList()`
-- `opsForSet()`
-- `opsForZSet()`
-- `opsForStream()`
-- Key and value serializers
-- JSON serialization with Jackson
-- Java serialization problems
-- Custom serializer configuration
-- Generic Redis service implementation
+```bash
+docker compose up -d
+```
 
-### Part 7: Redis Serialization in Spring Boot
+### 3. Run Spring Boot Application
 
-- Why serialization matters
-- JDK serialization issues
-- JSON serialization
-- `GenericJackson2JsonRedisSerializer`
-- `Jackson2JsonRedisSerializer`
-- `StringRedisSerializer`
-- Handling `LocalDateTime`
-- Handling polymorphic objects
-- Backward compatibility
-- Versioning cached objects
-- Production serializer strategy
+```bash
+./mvnw spring-boot:run
+```
+
+### 4. Test Redis Connection
+
+```bash
+docker exec -it redis redis-cli ping
+```
+
+Expected output:
+
+```text
+PONG
+```
+
+### 5. Check Application Health
+
+```bash
+curl http://localhost:8080/actuator/health
+```
 
 ---
 
-## Phase 3 — Caching with Spring Boot
+## 🏗️ Architecture
 
-### Part 8: Spring Cache Abstraction
+```mermaid
+flowchart TD
+    A[Client] --> B[Spring Boot API]
+    B --> C{Redis Cache}
+    C -- Cache Hit --> D[Return Cached Response]
+    C -- Cache Miss --> E[(PostgreSQL / MySQL)]
+    E --> F[Store Data in Redis]
+    F --> G[Return Response]
+    B --> H[Apache Kafka]
+    H --> I[Cache Invalidation Consumer]
+    I --> C
+```
 
-- What is caching?
-- Cache hit vs cache miss
+### High-Level Flow
+
+```text
+Client
+  |
+  v
+Spring Boot API
+  |
+  +--> Redis Cache
+  |       |
+  |       +--> Cache Hit: Fast response
+  |       |
+  |       +--> Cache Miss: Fetch from DB and cache it
+  |
+  +--> PostgreSQL / MySQL
+  |
+  +--> Kafka
+          |
+          +--> Cache invalidation
+          |
+          +--> Event-driven processing
+```
+
+Redis acts as the fast, temporary data layer, while the relational database remains the source of truth. Spring Data Redis provides Redis connectivity and integrates with the Spring Cache abstraction. [429][430]
+
+---
+
+## 🧰 Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Language | Java 17+ |
+| Framework | Spring Boot 3.x |
+| Cache / Data Store | Redis 7.x |
+| Redis Client | Spring Data Redis + Lettuce |
+| Database | PostgreSQL / MySQL |
+| Messaging | Apache Kafka |
+| Distributed Locks | Redisson |
+| Monitoring | Spring Boot Actuator, Micrometer, Prometheus, Grafana |
+| Containerization | Docker, Docker Compose |
+| Orchestration | Kubernetes |
+| Testing | JUnit 5, Mockito, Testcontainers, k6 |
+
+---
+
+## ✨ What You Will Learn
+
+### Redis Fundamentals
+
+- Redis architecture
+- Redis data types
+- TTL and expiration
+- Redis commands
+- Transactions and Lua scripting
+- Memory management
+- Persistence: RDB and AOF
+
+### Spring Boot Integration
+
+- Spring Data Redis setup
+- Lettuce connection configuration
+- `RedisTemplate`
+- `StringRedisTemplate`
+- Serializers
+- Connection pooling
+- Health checks
+
+### Caching
+
 - Cache-aside pattern
 - Read-through cache
 - Write-through cache
 - Write-behind cache
-- Cache penetration
-- Cache stampede
-- Cache avalanche
-- Spring Cache abstraction overview
-- `@EnableCaching`
-
-### Part 9: `@Cacheable`, `@CachePut`, `@CacheEvict`
-
 - `@Cacheable`
 - `@CachePut`
 - `@CacheEvict`
-- `@Caching`
-- Cache names
-- Cache keys
-- SpEL expressions
-- Conditional caching
-- `unless` vs `condition`
-- `sync = true`
-- Caching DTOs and entities
-- Null value handling
-- Real-world user profile caching example
+- Cache invalidation
+- Cache stampede, penetration, and avalanche
 
-### Part 10: Redis Cache Configuration
+### Distributed Systems Patterns
 
-- `RedisCacheManager`
-- Default TTL
-- Cache-specific TTL
-- Key prefix
-- Null caching
-- Transaction-aware caching
-- Custom `RedisCacheConfiguration`
-- CacheManager bean
-- Multiple cache regions
-- Cache naming conventions
-- Production cache configuration example
-
-### Part 11: Cache Invalidation Strategies
-
-- Why invalidation is difficult
-- TTL-based invalidation
-- Event-based invalidation
-- Write-through invalidation
-- Kafka-based cache invalidation
-- Cache versioning
-- Cache busting
-- Stale cache handling
-- Cache consistency trade-offs
-- Real-world social media feed example
-
----
-
-## Phase 4 — Redis for Real Backend Features
-
-### Part 12: User Session Management
-
-- Stateless vs stateful authentication
-- JWT vs Redis sessions
-- Redis session storage
-- Spring Session Redis
-- Session TTL
-- Refresh token storage
-- Logout and token revocation
-- Multi-device session handling
-- Security best practices
-- Production session architecture
-
-### Part 13: Distributed Locks
-
-- Why distributed locks are needed
-- Race conditions in microservices
-- `SET NX PX`
-- Lock expiry problem
-- Lock ownership problem
-- Redisson introduction
-- `RLock`
-- `tryLock`
-- Watchdog mechanism
-- RedLock discussion
-- Lock best practices
-- Preventing duplicate processing
-
-### Part 14: Rate Limiting with Redis
-
-- Why rate limiting is needed
-- Fixed window counter
-- Sliding window log
-- Sliding window counter
-- Token bucket
-- Leaky bucket
-- Redis-based implementation
-- Redisson rate limiter
-- API-level rate limiting
-- User-level rate limiting
-- IP-based rate limiting
-- Production rate-limit architecture
-
-### Part 15: Leaderboards and Counters
-
-- Sorted sets
-- `ZADD`
-- `ZSCORE`
-- `ZRANK`
-- `ZREVRANGE`
-- Leaderboard API design
-- Real-time ranking
-- User score updates
-- Tie-breaking strategies
-- Pagination in leaderboards
-- Social media leaderboard example
-
-### Part 16: Redis Pub/Sub
-
-- What is Pub/Sub?
-- Publisher, channel, subscriber
-- Redis Pub/Sub vs Kafka
-- Spring Boot publisher
-- Spring Boot subscriber
-- `RedisMessageListenerContainer`
-- Message serialization
-- Delivery guarantees
-- Use cases
-- Limitations of Pub/Sub
-- When to choose Kafka instead
-
-### Part 17: Redis Streams
-
-- What are Redis Streams?
-- Stream vs Pub/Sub
-- Stream vs Kafka
-- `XADD`
-- `XREAD`
-- `XREADGROUP`
-- Consumer groups
-- Acknowledgements
-- Pending entries
-- Message retry
-- Dead letter handling
-- Spring Boot Redis Stream listener
-- Event-driven microservices example
-
----
-
-## Phase 5 — Redis Reliability and Performance
-
-### Part 18: Redis Persistence
-
-- Why persistence matters
-- RDB snapshots
-- AOF persistence
-- RDB vs AOF
-- `appendfsync` options
-- Hybrid persistence
-- Backup strategy
-- Data loss scenarios
-- Redis persistence configuration
-- Production persistence recommendations
-
-### Part 19: Redis Memory Management
-
-- Redis memory model
-- `maxmemory`
-- Memory fragmentation
-- Key expiration
-- Lazy expiration vs active expiration
-- Eviction policies
-- `allkeys-lru`
-- `allkeys-lfu`
-- `volatile-lru`
-- `volatile-ttl`
-- `noeviction`
-- Choosing the right eviction policy
-- Large key detection
-- Memory optimization techniques
-
-### Part 20: Redis Performance Optimization
-
-- Redis benchmarking
-- Latency troubleshooting
-- Pipelining
-- Connection pooling
-- Avoiding blocking commands
-- `KEYS` vs `SCAN`
-- Large values problem
-- Hot key problem
-- Big hash/list handling
-- Redis slow log
-- Client-side caching
-- Performance checklist
-
----
-
-## Phase 6 — High Availability and Scaling
-
-### Part 21: Redis Replication
-
-- Master-replica architecture
-- Read replicas
-- Replication lag
-- Read-your-writes problem
-- Failover basics
-- Replica promotion
-- Replication configuration
-- Production replication topology
-
-### Part 22: Redis Sentinel
-
-- What is Redis Sentinel?
-- Sentinel responsibilities
-- Automatic failover
-- Quorum
-- Master discovery
-- Spring Boot Sentinel configuration
-- Sentinel limitations
-- Production Sentinel setup
-- When to use Sentinel
-
-### Part 23: Redis Cluster
-
-- What is Redis Cluster?
-- Hash slots
-- Data sharding
-- Cluster topology
-- Cluster vs Sentinel
-- Spring Boot Cluster configuration
-- Multi-key operations in Cluster
-- Hash tags
-- Cluster limitations
-- Production Cluster architecture
-
-### Part 24: Redis High Availability Design
-
-- Single Redis instance
-- Master-replica
-- Sentinel
-- Cluster
-- Managed Redis: AWS ElastiCache, Redis Cloud, Upstash
-- Disaster recovery
-- Backup and restore
-- Failure scenarios
-- Choosing the right topology
-- Production HA checklist
-
----
-
-## Phase 7 — Security, Monitoring, Deployment
-
-### Part 25: Redis Security
-
-- Redis security risks
-- Authentication
-- ACL users
-- TLS encryption
-- Network isolation
-- VPC/private subnet
-- Firewall rules
-- Dangerous commands
-- `FLUSHALL`
-- `CONFIG`
-- Command renaming
-- Secret management
-- Production security checklist
-
-### Part 26: Redis Monitoring and Observability
-
-- Important Redis metrics
-- Memory usage
-- Hit ratio
-- Miss ratio
-- Evictions
-- Connected clients
-- Blocked clients
-- Latency
-- Replication lag
-- Persistence status
-- Spring Boot Actuator
-- Micrometer
-- Prometheus
-- Grafana dashboards
-- Alerting rules
-
-### Part 27: Redis Deployment with Docker
-
-- Docker Redis setup
-- Docker Compose configuration
-- Persistent volumes
-- Environment variables
-- Health checks
-- Resource limits
-- Redis in Kubernetes
-- StatefulSet basics
-- Helm chart overview
-- Production deployment checklist
-
-### Part 28: Redis Testing in Spring Boot
-
-- Unit testing Redis code
-- Integration testing
-- Testcontainers Redis
-- Embedded Redis issues
-- Mocking RedisTemplate
-- Cache testing
-- TTL testing
-- Distributed lock testing
-- Load testing Redis-backed APIs
-
----
-
-## Phase 8 — Final Production Project
-
-### Part 29: Social Media Backend with Redis
-
-Build a production-style module using Redis:
-
-- User profile caching
-- Followers/following cache
-- Feed caching
-- Like count caching
-- Trending posts leaderboard
+- Distributed locks
 - Rate limiting
-- JWT refresh-token storage
-- Online user presence
+- Leaderboards
+- Online presence
+- Idempotency
+- Pub/Sub
+- Redis Streams
 - Kafka-based cache invalidation
-- Distributed lock for feed generation
-- Monitoring and alerting
 
-### Part 30: Production Checklist
+### Production Operations
 
-- TTL on all cache keys
-- Proper serializer
-- Key namespace/prefix
-- Connection pool configured
-- Timeouts configured
-- Circuit breaker/fallback
-- Cache invalidation strategy
-- Security enabled
-- Monitoring enabled
-- Persistence configured
-- Backup strategy
-- Load testing completed
-- Disaster recovery plan
-- Runbook for Redis failures
+- Redis persistence
+- Replication
+- Sentinel
+- Redis Cluster
+- Monitoring
+- Security
+- Docker deployment
+- Kubernetes deployment
+- Testing
+- Disaster recovery
+- Production runbook
 
 ---
 
-## Final Deliverables
+## 📚 Documentation Index
 
-By the end, you will have:
-
-- A complete Redis + Spring Boot documentation repository
-- Production-ready configuration files
-- Reusable Redis service classes
-- Cache, lock, rate limiter, session, and stream examples
-- Docker Compose setup
-- Monitoring setup
-- Interview preparation notes
-- A real-world social media backend module using Redis
+| Part | Topic | Status |
+|---|---|---|
+| 01 | Introduction to Redis | ✅ |
+| 02 | Redis Data Types | ✅ |
+| 03 | Redis Commands, TTL, Transactions and Lua | ✅ |
+| 04 | Spring Data Redis Setup | ✅ |
+| 05 | Redis Connection Configuration | ✅ |
+| 06 | RedisTemplate Deep Dive | ✅ |
+| 07 | Redis Serialization | ✅ |
+| 08 | Spring Cache Abstraction | ✅ |
+| 09 | `@Cacheable`, `@CachePut`, `@CacheEvict` | ✅ |
+| 10 | Redis Cache Configuration | ✅ |
+| 11 | Cache Invalidation Strategies | ✅ |
+| 12 | User Session Management | ✅ |
+| 13 | Distributed Locks | ✅ |
+| 14 | Rate Limiting | ✅ |
+| 15 | Leaderboards and Counters | ✅ |
+| 16 | Redis Pub/Sub | ✅ |
+| 17 | Redis Streams | ✅ |
+| 18 | Redis Persistence | ✅ |
+| 19 | Memory Management and Eviction | ✅ |
+| 20 | Performance Optimization | ✅ |
+| 21 | Redis Replication | ✅ |
+| 22 | Redis Sentinel | ✅ |
+| 23 | Redis Cluster | ✅ |
+| 24 | High Availability Design | ✅ |
+| 25 | Redis Security | ✅ |
+| 26 | Monitoring and Observability | ✅ |
+| 27 | Docker and Kubernetes Deployment | ✅ |
+| 28 | Testing in Spring Boot | ✅ |
+| 29 | Social Media Backend Project | ✅ |
+| 30 | Production Checklist and Runbook | ✅ |
 
 ---
 
-## Suggested Repository Structure
+## 📁 Repository Structure
 
 ```text
 redis-spring-boot-guide/
 ├── README.md
+├── LICENSE
+├── pom.xml
+├── docker/
+│   └── docker-compose.yml
 ├── docs/
 │   ├── 01-introduction-to-redis.md
 │   ├── 02-redis-data-types.md
-│   ├── 03-redis-commands-and-ttl.md
+│   ├── 03-redis-commands-ttl-transactions-lua.md
 │   ├── 04-spring-data-redis-setup.md
 │   ├── 05-redis-connection-configuration.md
 │   ├── 06-redis-template-deep-dive.md
@@ -525,51 +258,267 @@ redis-spring-boot-guide/
 │   ├── 09-cacheable-cacheput-cacheevict.md
 │   ├── 10-redis-cache-configuration.md
 │   ├── 11-cache-invalidation-strategies.md
-│   ├── 12-session-management.md
+│   ├── 12-user-session-management.md
 │   ├── 13-distributed-locks.md
 │   ├── 14-rate-limiting.md
 │   ├── 15-leaderboards-and-counters.md
 │   ├── 16-redis-pub-sub.md
 │   ├── 17-redis-streams.md
 │   ├── 18-redis-persistence.md
-│   ├── 19-memory-management.md
+│   ├── 19-memory-management-and-eviction.md
 │   ├── 20-performance-optimization.md
-│   ├── 21-replication.md
-│   ├── 22-sentinel.md
+│   ├── 21-redis-replication.md
+│   ├── 22-redis-sentinel.md
 │   ├── 23-redis-cluster.md
 │   ├── 24-high-availability-design.md
-│   ├── 25-security.md
-│   ├── 26-monitoring.md
-│   ├── 27-docker-deployment.md
-│   ├── 28-testing.md
-│   ├── 29-social-media-project.md
-│   └── 30-production-checklist.md
+│   ├── 25-redis-security.md
+│   ├── 26-monitoring-and-observability.md
+│   ├── 27-docker-kubernetes-deployment.md
+│   ├── 28-testing-in-spring-boot.md
+│   ├── 29-social-media-backend-project.md
+│   └── 30-production-checklist-runbook.md
 ├── src/
 │   └── main/
-│       └── java/
-│           └── com/example/redis/
-├── docker/
-│   └── docker-compose.yml
-└── pom.xml
+│       ├── java/
+│       │   └── com/example/redis/
+│       │       ├── config/
+│       │       ├── controller/
+│       │       ├── service/
+│       │       ├── repository/
+│       │       ├── dto/
+│       │       ├── ratelimit/
+│       │       ├── lock/
+│       │       ├── stream/
+│       │       └── pubsub/
+│       └── resources/
+│           ├── application.yml
+│           └── application-local.yml
+└── src/
+    └── test/
+        └── java/
+            └── com/example/redis/
+                ├── unit/
+                └── integration/
 ```
 
 ---
 
-## Next Part
+## 🔑 Redis Key Naming Convention
 
-**Part 1: Introduction to Redis — Complete Deep Dive**
+This guide follows a predictable and production-safe Redis key naming convention:
 
-Isme hum cover karenge:
+```text
+<service-name>:<entity>:<id>:<attribute>
+```
 
-- Redis kya hai
-- Redis itna fast kyun hai
-- Redis vs MySQL
-- Redis vs MongoDB
-- Redis vs Kafka
-- Redis real-world use cases
-- Redis architecture
-- Redis ko kab use karna chahiye
-- Redis ko kab avoid karna chahiye
-- Redis basic commands
-- Redis production mindset
-- Interview questions
+### Examples
+
+```text
+user-service:user:101:profile
+user-service:user:101:followers
+post-service:post:201:likes
+post-service:trending:posts
+feed-service:user:101:timeline
+auth-service:refresh-token:{tokenId}
+rate-limit:user:101:endpoint:/posts
+```
+
+### Benefits
+
+- Prevents key collisions between services
+- Makes debugging easier
+- Improves cache ownership clarity
+- Supports multi-service Redis usage
+- Makes monitoring and cleanup easier
+
+---
+
+## 🧠 Redis Usage Patterns
+
+| Use Case | Redis Pattern |
+|---|---|
+| API response caching | Cache-aside |
+| Database query caching | Cache-aside |
+| User sessions | Redis Hash / Spring Session |
+| Refresh tokens | Redis String / Hash |
+| Token revocation | Redis blacklist |
+| Distributed lock | `SET NX PX` / Redisson |
+| Rate limiting | Fixed window / token bucket |
+| Leaderboard | Sorted Set |
+| Like counter | `INCR` |
+| Trending posts | Sorted Set |
+| Online presence | Bitmap / Set |
+| Real-time notifications | Pub/Sub |
+| Reliable event processing | Redis Streams / Kafka |
+
+---
+
+## 🛡️ Production Best Practices
+
+### Caching
+
+- Always set TTL for cache entries.
+- Use TTL jitter to prevent cache avalanche.
+- Cache DTOs, not raw JPA entities.
+- Invalidate cache after database writes.
+- Handle cache misses safely.
+- Use key prefixes for service isolation.
+
+### Reliability
+
+- Configure connection timeouts.
+- Configure command timeouts.
+- Use connection pooling.
+- Add database fallback when Redis is unavailable.
+- Monitor Redis health continuously.
+- Use replication and automatic failover for production.
+
+### Security
+
+- Never expose Redis to the public internet.
+- Use authentication and ACL users.
+- Enable TLS for untrusted networks.
+- Restrict dangerous commands such as `FLUSHALL`, `FLUSHDB`, `CONFIG`, and `DEBUG`.
+- Store secrets in a secret manager, not in Git.
+
+### Performance
+
+- Avoid `KEYS *` in production.
+- Use `SCAN` for key iteration.
+- Use pipelining for bulk operations.
+- Avoid large values and large collections.
+- Monitor hot keys and big keys.
+- Use Redis Slow Log for latency troubleshooting.
+
+---
+
+## 🧪 Testing
+
+This repository includes testing guidance for:
+
+| Test Type | Tool | Purpose |
+|---|---|---|
+| Unit tests | JUnit 5 + Mockito | Test service logic with mocked Redis |
+| Integration tests | Testcontainers | Test real Redis behavior |
+| Cache tests | Spring Cache + Redis | Verify cache hit, miss, TTL |
+| Lock tests | Redis / Redisson | Verify concurrent locking |
+| Stream tests | Redis Streams | Verify consumer groups and ACK |
+| Load tests | k6 / JMeter / Gatling | Verify latency and throughput |
+
+---
+
+## 📈 Monitoring Metrics
+
+Important Redis metrics to monitor:
+
+```text
+redis_up
+redis_memory_used_bytes
+redis_memory_max_bytes
+redis_connected_clients
+redis_keyspace_hits_total
+redis_keyspace_misses_total
+redis_evicted_keys_total
+redis_commands_processed_total
+redis_slowlog_length
+redis_replication_lag
+```
+
+### Cache Hit Ratio
+
+```text
+Cache Hit Ratio =
+Cache Hits / (Cache Hits + Cache Misses)
+```
+
+A healthy cache usually targets a high hit ratio, but the exact target depends on workload and data access patterns.
+
+---
+
+## 🐳 Docker Compose Example
+
+```yaml
+services:
+  redis:
+    image: redis:7.4-alpine
+    container_name: redis
+    ports:
+      - "127.0.0.1:6379:6379"
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+    volumes:
+      - redis_data:/data
+    command: >
+      redis-server
+      --requirepass ${REDIS_PASSWORD}
+      --appendonly yes
+      --appendfsync everysec
+      --maxmemory 512mb
+      --maxmemory-policy allkeys-lru
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a \"$$REDIS_PASSWORD\" ping | grep -q PONG"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  redis_data:
+```
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome!
+
+1. Fork the repository.
+2. Create a new branch:
+
+```bash
+git checkout -b feature/your-feature
+```
+
+3. Commit your changes:
+
+```bash
+git commit -m "Add: your meaningful commit message"
+```
+
+4. Push the branch:
+
+```bash
+git push origin feature/your-feature
+```
+
+5. Open a Pull Request.
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+---
+
+## 🙌 Author
+
+**Your Name**
+
+- GitHub: [your-username](https://github.com/your-username)
+- LinkedIn: [your-linkedin](https://www.linkedin.com/in/your-linkedin)
+
+---
+
+## ⭐ Support
+
+If this repository helps you learn Redis with Spring Boot, please consider giving it a ⭐ on GitHub.
+
+---
+
+## 🔗 Useful Resources
+
+- [Spring Data Redis Documentation](https://docs.spring.io/spring-data/redis/reference/)
+- [Redis Official Documentation](https://redis.io/docs/latest/)
+- [Spring Boot Documentation](https://docs.spring.io/spring-boot/index.html)
+- [Redisson Documentation](https://redisson.pro/docs/)
+- [Apache Kafka Documentation](https://kafka.apache.org/documentation/)
