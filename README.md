@@ -504,7 +504,7 @@ This project is licensed under the MIT License.
 
 **Your Name**
 
-- GitHub: [your-username](https://github.com/your-username)
+- GitHub: [your-username](https://github.com/SinghAnna)
 - LinkedIn: [your-linkedin](https://www.linkedin.com/in/your-linkedin)
 
 ---
