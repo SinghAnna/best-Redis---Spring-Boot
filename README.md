@@ -43,7 +43,7 @@ It is designed for Java backend developers, microservice developers, and student
 ### 1. Clone the Repository
 
 ```bash
-git clone [https://github.com/your-username/redis-spring-boot-guide.git](https://github.com/your-username/redis-spring-boot-guide.git)
+git clone [https://github.com/SinghAnna/best-Redis---Spring-Boot.git](https://github.com/SinghAnna/best-Redis---Spring-Boot.git)
 cd redis-spring-boot-guide
 ```
 
